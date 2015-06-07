@@ -1,0 +1,13 @@
+﻿* smart printer (can we get console width?)
+* commands have 
+	* options
+		* name, alias
+		* isflag
+		* default
+		* 
+	* arguments
+		* optional?
+		* type
+		* validator
+	* subcommands
+		* these are full commands!
