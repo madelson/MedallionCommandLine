@@ -49,7 +49,7 @@ namespace Medallion.CommandLine
             else
             {
                 // scan for options & arguments
-                var argumentTokens = new List<string>();
+                var argumentTokens = new List<ListSegment<string>>();
                 this.GatherCommandOptionsAndArguments(template, args, errors, options, argumentTokens);
 
                 // validate options
@@ -83,7 +83,7 @@ namespace Medallion.CommandLine
             ListSegment<string> args, 
             List<CommandLineParseError> errors, 
             List<Option> options, 
-            List<string> arguments)
+            List<ListSegment<string>> arguments)
         {
             if (args.Count == 0)
             {
@@ -129,12 +129,77 @@ namespace Medallion.CommandLine
             }
             else
             {
-                arguments.Add(arg);
+                arguments.Add(args.Take(1));
                 this.GatherCommandOptionsAndArguments(template, args.Skip(1), errors, options, arguments);
             }
         }
 
-        private void ParseArguments(CommandTemplate template, List<string> argumentTokens, List<Argument> arguments, List<CommandLineParseError> errors)
+        private void ParseArguments(CommandTemplate template, List<ListSegment<string>> argumentTokens, List<Argument> arguments, List<CommandLineParseError> errors)
+        {
+            if (!template.Arguments.Any())
+            {
+                if (argumentTokens.Any())
+                {
+                    errors.Add(new CommandLineParseError()); // unexpected argument
+                }
+                return;
+            }
+
+            if (template.Arguments[0].Required)
+            {
+                // parse forward
+                for (var i = 0; i < template.Arguments.Count; ++i)
+                {
+                    var argumentTemplate = template.Arguments[i];
+
+                    if (i >= argumentTokens.Count)
+                    { 
+                        if (argumentTemplate.Required)
+                        {
+                            errors.Add(new CommandLineParseError()); // missing required arg
+                        }
+                        break; // further errors likely aren't meaningful
+                    }
+
+                    if (argumentTemplate.IsParams)
+                    {
+                        throw new NotImplementedException(); // need adjacency logic
+                    }
+                    else
+                    {
+                        arguments.Add(this.ParseArgument(argumentTemplate, argumentTokens[i]));
+                    }
+                }
+            }
+            else
+            {
+                // parse backward (TODO merge with forward)
+                for (var i = 0; i < template.Arguments.Count; ++i)
+                {
+                    var argumentTemplate = template.Arguments[template.Arguments.Count - i - 1];
+
+                    if (i >= argumentTokens.Count)
+                    { 
+                        if (argumentTemplate.Required)
+                        {
+                            errors.Add(new CommandLineParseError()); // missing required arg
+                        }
+                        break; // further errors likely aren't meaningful
+                    }
+
+                    if (argumentTemplate.IsParams)
+                    {
+                        throw new NotImplementedException(); // need adjacency logic
+                    }
+                    else
+                    {
+                        arguments.Add(this.ParseArgument(argumentTemplate, argumentTokens[template.Arguments.Count - i - 1]));
+                    }
+                }
+            }
+        }
+
+        private Argument ParseArgument(ArgumentTemplate argument, ListSegment<string> args)
         {
             throw new NotImplementedException();
         }
