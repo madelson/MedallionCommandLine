@@ -35,7 +35,7 @@ namespace Medallion.CommandLine.Builders
         public TBuilder Option(string name, Action<OptionParserBuilder> optionBuilder)
         {
             Throw.IfNullOrWhitespace(name, "name");
-            Throw.IfNull(optionBuilder, "subCommandBuilder");
+            Throw.IfNull(optionBuilder, "optionBuilder");
 
             this.options.Add(() => new OptionParserBuilder(name).Initialize(optionBuilder));
 
