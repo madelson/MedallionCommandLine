@@ -46,9 +46,10 @@
     <Compile Include="Builders\CommandParserBuilder.cs" />
     <Compile Include="Builders\OptionParserBuilder.cs" />
     <Compile Include="CommandLineParseResult.cs" />
-    <Compile Include="ListTail.cs" />
+    <Compile Include="ListSegment.cs" />
     <Compile Include="Model\ArgumentCollection.cs" />
     <Compile Include="Model\Command.cs" />
+    <Compile Include="Model\CommandLineParseErrorCollection.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\OptionCollection.cs" />
     <Compile Include="Model\ParseNode.cs" />

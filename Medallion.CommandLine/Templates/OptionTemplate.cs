@@ -9,5 +9,6 @@ namespace Medallion.CommandLine.Templates
     internal class OptionTemplate : ArgumentTemplate
     {
         public bool AllowShortName { get; set; }
+        public bool AllowMultiple { get; set; }
     }
 }

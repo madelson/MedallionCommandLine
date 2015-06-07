@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Templates
 {
-    internal class ArgumentTemplate
+    internal class ArgumentTemplate : TemplateBase
     {
         public bool Required { get; set; }
         public Type Type { get; set; }

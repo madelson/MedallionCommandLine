@@ -11,3 +11,8 @@
 		* validator
 	* subcommands
 		* these are full commands!
+
+
+* help option
+* styles (e. g. -- /Q, ...)
+* defaults

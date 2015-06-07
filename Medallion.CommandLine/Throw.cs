@@ -16,6 +16,15 @@ namespace Medallion.CommandLine
             }
         }
 
+        public static void IfNullOrHasNulls<T>(IReadOnlyCollection<T> value, string paramName)
+        {
+            Throw.IfNull(value, "paramName");
+            if (value.Any(t => t == null))
+            {
+                throw new ArgumentNullException(paramName + ": must not contain nulls");
+            }
+        }
+
         public static void IfNullOrWhitespace(string value, string paramName)
         {
             if (string.IsNullOrWhiteSpace(value))
