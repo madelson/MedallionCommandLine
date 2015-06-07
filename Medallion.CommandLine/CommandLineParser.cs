@@ -28,6 +28,8 @@ namespace Medallion.CommandLine
         private Command ParseCommand(CommandTemplate template, ListSegment<string> args)
         {
             var errors = new List<CommandLineParseError>();
+            var options = new List<Option>();
+            var arguments = new List<Argument>();
 
             // check for sub commands
             var subCommand = args.Any()
@@ -47,9 +49,8 @@ namespace Medallion.CommandLine
             else
             {
                 // scan for options & arguments
-                var options = new List<Option>();
-                var arguments = new List<string>();
-                this.GatherCommandOptionsAndArguments(template, args, errors, options, arguments);
+                var argumentTokens = new List<string>();
+                this.GatherCommandOptionsAndArguments(template, args, errors, options, argumentTokens);
 
                 // validate options
                 var missingRequiredOptions = template.Options.Where(o => o.Required)
@@ -63,9 +64,18 @@ namespace Medallion.CommandLine
                     .ToList();
                 duplicateOptions.ForEach(g => errors.Add(new CommandLineParseError()));
 
-                // validate arguments
-
+                // parse arguments
+                this.ParseArguments(template, argumentTokens, arguments, errors);
             }
+
+            return new Command(
+                template,
+                subCommand,
+                options,
+                arguments,
+                args,
+                errors
+            );
         }
 
         private void GatherCommandOptionsAndArguments(
@@ -99,6 +109,12 @@ namespace Medallion.CommandLine
             else if (arg.StartsWith("-"))
             {
                 var optionName = arg.Substring(1);
+                if (optionName.Length > 1)
+                {
+                    // multi-flag option (e. g. -xds)
+                    throw new NotImplementedException();
+                }
+
                 var match = template.Options.FirstOrDefault(o => o.AllowShortName && o.Name.Substring(1) == optionName);
                 if (match != null)
                 {
@@ -116,6 +132,11 @@ namespace Medallion.CommandLine
                 arguments.Add(arg);
                 this.GatherCommandOptionsAndArguments(template, args.Skip(1), errors, options, arguments);
             }
+        }
+
+        private void ParseArguments(CommandTemplate template, List<string> argumentTokens, List<Argument> arguments, List<CommandLineParseError> errors)
+        {
+            throw new NotImplementedException();
         }
 
         private Option ParseOption(OptionTemplate template, ListSegment<string> args)

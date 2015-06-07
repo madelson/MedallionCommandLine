@@ -15,4 +15,7 @@
 
 * help option
 * styles (e. g. -- /Q, ...)
+* --t=xxx, other styles for option args from docopt
 * defaults
+* Path validation (Path.GetFullPath)
+* Consider rename of Option/Arg to CommandOption, CommandArg to avoid public pollution

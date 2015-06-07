@@ -16,7 +16,7 @@ namespace Medallion.CommandLine.Templates
         private readonly List<OptionTemplate> options = new List<OptionTemplate>();
         public ICollection<OptionTemplate> Options { get { return this.options; } }
 
-        private readonly List<ArgumentTemplate> arguments = new List<ArgumentTemplate>();
-        public List<ArgumentTemplate> Arguments { get { return this.arguments; } }
+        private readonly List<PositionalArgumentTemplate> arguments = new List<PositionalArgumentTemplate>();
+        public List<PositionalArgumentTemplate> Arguments { get { return this.arguments; } }
     }
 }

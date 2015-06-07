@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Model
 {
-    public sealed class Option : ParseNode
+    public sealed class Argument : ParseNode
     {
-        internal Option(OptionTemplate template, ListSegment<string> tokens, IEnumerable<CommandLineParseError> errors) 
+        internal Argument(PositionalArgumentTemplate template, ListSegment<string> tokens, IEnumerable<CommandLineParseError> errors)
             : base(tokens, errors)
         {
             this.Template = template;
         }
 
-        internal OptionTemplate Template { get; private set; }
+        internal PositionalArgumentTemplate Template { get; private set; }
     }
 }
