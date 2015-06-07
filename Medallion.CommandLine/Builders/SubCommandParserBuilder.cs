@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Builders
 {
-    class SubCommandParserBuilder : CommandParserBuilder<SubCommandParserBuilder>
+    public sealed class SubCommandParserBuilder : CommandParserBuilder<SubCommandParserBuilder>
     {
-        private readonly string name;
-
         internal SubCommandParserBuilder(string name)
+            : base(name)
         {
-            this.name = name;
         }
     }
 }

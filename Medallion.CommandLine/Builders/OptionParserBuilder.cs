@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Builders
 {
-    class OptionParserBuilder : ParserBuilderBase<OptionParserBuilder>
+    public sealed class OptionParserBuilder : ParserBuilderBase<OptionParserBuilder>
     {
         private readonly string name;
 

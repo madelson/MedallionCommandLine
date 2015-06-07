@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Builders
 {
-    abstract class ParserBuilderBase<TBuilder>
+    public abstract class ParserBuilderBase<TBuilder>
         where TBuilder : ParserBuilderBase<TBuilder>
     {
+        internal ParserBuilderBase() { }
+
         internal TBuilder Initialize(Action<TBuilder> builder)
         {
             builder((TBuilder)this);

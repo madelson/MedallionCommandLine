@@ -1,4 +1,5 @@
-﻿using Medallion.CommandLine.Model;
+﻿using Medallion.CommandLine.Builders;
+using Medallion.CommandLine.Model;
 using Medallion.CommandLine.Templates;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,11 @@ namespace Medallion.CommandLine
         internal CommandLineParser(CommandTemplate template)
         {
             this.template = template;
+        }
+
+        public static CommandLineParserBuilder Create(string commandName = null)
+        {
+            return new CommandLineParserBuilder(commandName);
         }
 
         public CommandLineParseResult Parse(IReadOnlyList<string> args)

@@ -8,9 +8,16 @@ using System.Threading.Tasks;
 
 namespace Medallion.CommandLine.Builders
 {
-    abstract class CommandParserBuilder<TBuilder> : ParserBuilderBase<TBuilder>
+    public abstract class CommandParserBuilder<TBuilder> : ParserBuilderBase<TBuilder>
         where TBuilder : CommandParserBuilder<TBuilder>
     {
+        private readonly string name;
+
+        internal CommandParserBuilder(string name)
+        {
+            this.name = name;
+        }
+
         private readonly List<Func<SubCommandParserBuilder>> subCommands = new List<Func<SubCommandParserBuilder>>();
 
         public TBuilder SubCommand(string name, Action<SubCommandParserBuilder> subCommandBuilder)

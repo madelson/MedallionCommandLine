@@ -11,6 +11,9 @@ namespace Medallion.CommandLine
     {
         internal CommandLineParseResult(Command command)
         {
+            this.Command = command;
         }
+
+        public Command Command { get; private set; }
     }
 }
