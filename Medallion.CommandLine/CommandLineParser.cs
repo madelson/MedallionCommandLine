@@ -212,7 +212,49 @@ namespace Medallion.CommandLine
 
         private Option ParseOption(OptionTemplate template, ListSegment<string> args)
         {
-            throw new NotImplementedException();
+            var errors = new List<CommandLineParseError>();
+
+            if (template.IsFlag)
+            {
+                return new Option(template, value: true, tokens: args.Take(1), errors: errors);
+            }
+
+            ListSegment<string> tokens;
+            object value;
+            if (args.Count < 2)
+            {
+                errors.Add(new CommandLineParseError()); // missing arg
+                tokens = args.Take(1);
+                value = null;
+            }
+            else
+            {
+                tokens = args.Take(2);
+
+                try
+                {
+                    value = template.Parser(tokens[1]);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(new CommandLineParseError()); // ex
+                    value = null;
+                }
+
+                if (!errors.Any())
+                {
+                    try
+                    {
+                        template.Validator(value);
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.Add(new CommandLineParseError()); // ex
+                    }
+                }
+            }
+
+            return new Option(template, value, tokens, errors);
         }
     }
 }

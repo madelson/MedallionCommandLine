@@ -10,5 +10,6 @@ namespace Medallion.CommandLine.Templates
     {
         public bool AllowShortName { get; set; }
         public bool AllowMultiple { get; set; }
+        public bool IsFlag { get; set; }
     }
 }

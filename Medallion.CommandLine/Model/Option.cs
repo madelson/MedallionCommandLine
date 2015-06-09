@@ -9,12 +9,14 @@ namespace Medallion.CommandLine.Model
 {
     public sealed class Option : ParseNode
     {
-        internal Option(OptionTemplate template, ListSegment<string> tokens, IEnumerable<CommandLineParseError> errors) 
+        internal Option(OptionTemplate template, object value, ListSegment<string> tokens, IEnumerable<CommandLineParseError> errors) 
             : base(tokens, errors)
         {
             this.Template = template;
+            this.Value = value;
         }
 
         internal OptionTemplate Template { get; private set; }
+        public object Value { get; private set; }
     }
 }

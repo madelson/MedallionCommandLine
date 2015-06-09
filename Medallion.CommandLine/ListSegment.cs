@@ -42,6 +42,9 @@ namespace Medallion.CommandLine
             }
         }
 
+        public int Start { get { return this.start; } }
+        public IReadOnlyList<T> List { get { return this.list; } }
+
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
