@@ -8,7 +8,7 @@ namespace Medallion.CommandLine
 {
     public delegate bool TryParse<T>(string text, out T parsed);
 
-#pragma warning disable SA1130
+#pragma warning disable SA1130 // work around stylecop issue
     public static class Parser
     {
         public static TryParse<T> For<T>() => DefaultParser<T>.Value;

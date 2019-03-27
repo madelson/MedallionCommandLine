@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Medallion.CommandLine.Tests
 {
-    public class UnitTest1
+    public class ParserTest
     {
         [Test]
         public void TestMethod1()
