@@ -12,8 +12,17 @@
     <Optimize>True</Optimize>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <NoWarn>CS1591</NoWarn>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+    <PackageReference Include="System.Diagnostics.Process" version="4.3.0" />
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="stylecop.analyzers" Version="1.1.0-beta009">
       <PrivateAssets>all</PrivateAssets>
