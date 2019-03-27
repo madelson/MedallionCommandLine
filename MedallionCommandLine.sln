@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Medallion.CommandLine", "Medallion.CommandLine\Medallion.CommandLine.csproj", "{1D98E55C-F03F-4169-B450-4CC50DE218FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medallion.CommandLine.Tests", "Medallion.CommandLine.Tests\Medallion.CommandLine.Tests.csproj", "{6EC1F6C2-5599-4BBD-8996-F7BE6DF6372C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D98E55C-F03F-4169-B450-4CC50DE218FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D98E55C-F03F-4169-B450-4CC50DE218FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D98E55C-F03F-4169-B450-4CC50DE218FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D98E55C-F03F-4169-B450-4CC50DE218FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC1F6C2-5599-4BBD-8996-F7BE6DF6372C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC1F6C2-5599-4BBD-8996-F7BE6DF6372C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC1F6C2-5599-4BBD-8996-F7BE6DF6372C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC1F6C2-5599-4BBD-8996-F7BE6DF6372C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D10D1CD0-4F69-4278-87AF-AFB2C6626516}
+	EndGlobalSection
+EndGlobal
