@@ -11,9 +11,17 @@ namespace Medallion.CommandLine.Builders
 {
     public sealed class CommandLineParserBuilder : CommandParserBuilder<CommandLineParserBuilder>
     {
+        private OptionStyles optionStyles = Medallion.CommandLine.OptionStyles.Default;
+
         internal CommandLineParserBuilder(string name = null)
             : base(name ?? GetDefaultCommandName())
         {
+        }
+
+        public CommandLineParserBuilder OptionStyles(OptionStyles optionStyles)
+        {
+            this.optionStyles = optionStyles;
+            return this;
         }
 
         public CommandLineParser ToParser()

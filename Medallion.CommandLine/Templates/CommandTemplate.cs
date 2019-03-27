@@ -13,6 +13,8 @@ namespace Medallion.CommandLine.Templates
         private readonly List<CommandTemplate> subCommands = new List<CommandTemplate>();
         public List<CommandTemplate> SubCommands { get { return this.subCommands; } }
 
+        public OptionStyles OptionStyles { get; set; }
+
         private readonly List<OptionTemplate> options = new List<OptionTemplate>();
         public ICollection<OptionTemplate> Options { get { return this.options; } }
 

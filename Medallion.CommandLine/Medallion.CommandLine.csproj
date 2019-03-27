@@ -46,6 +46,7 @@
     <Compile Include="Builders\CommandParserBuilder.cs" />
     <Compile Include="Builders\OptionParserBuilder.cs" />
     <Compile Include="CommandLineParseResult.cs" />
+    <Compile Include="OptionStyles.cs" />
     <Compile Include="ListSegment.cs" />
     <Compile Include="Model\Argument.cs" />
     <Compile Include="Model\ArgumentCollection.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\OptionCollection.cs" />
     <Compile Include="Model\ParseNode.cs" />
+    <Compile Include="DefaultParser.cs" />
     <Compile Include="Templates\PositionalArgumentTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builders\SubCommandParserBuilder.cs" />

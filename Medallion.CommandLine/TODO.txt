@@ -14,9 +14,10 @@
 
 
 * help option
-* styles (e. g. -- /Q, ..., nuget style (single dash))
+* styles (e. g. -- /Q, ..., nuget style (single dash)), character -- ends option scanning
 * --t=xxx, other styles for option args from docopt
 * defaults
 * Path validation (Path.GetFullPath)
 * Consider rename of Option/Arg to CommandOption, CommandArg to avoid public pollution
 * Consider no mixing of positional and options
+* nullable parse support?
