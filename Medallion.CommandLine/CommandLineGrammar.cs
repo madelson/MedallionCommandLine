@@ -16,16 +16,7 @@ namespace Medallion.CommandLine
         /// or (by default) the name of the current process
         /// </summary>
         public CommandLineGrammar(string name = null)
-            : base(name ?? GetDefaultName())
         {
-        }
-
-        private static string GetDefaultName()
-        {
-            using (var process = Process.GetCurrentProcess())
-            {
-                return process.ProcessName;
-            }
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Medallion.CommandLine
 {
     public delegate string Validator<T>(T value);
 
+    // todo should be an abstract class
     public static class Validator
     {
         public static Validator<T> Min<T>(T min, IComparer<T> comparer = null, bool exclusive = false, string message = null)
