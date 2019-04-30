@@ -15,13 +15,13 @@ namespace Medallion.CommandLine.ParameterBuilders
 
     internal interface IHasValidator<TValue, TBuilder>
     {
-        TBuilder Validator(CommandParameterValidator<TValue> validator);
+        TBuilder Validator(IValidator<TValue> validator);
         TBuilder Validator(Action<TValue> validator);
     }
     
     internal interface IVariadicHasValidator<TValue, TBuilder> : IHasValidator<TValue, TBuilder>
     {
-        TBuilder Validator(CommandParameterValidator<ReadOnlyCollection<TValue>> validator);
+        TBuilder Validator(IValidator<ReadOnlyCollection<TValue>> validator);
         TBuilder Validator(Action<ReadOnlyCollection<TValue>> validator);
     }
 }

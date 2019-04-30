@@ -30,17 +30,17 @@ namespace Medallion.CommandLine.ParameterBuilders
 
         public new VariadicNamedParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
 
-        public VariadicNamedParameterBuilder<TValue> Validator(CommandParameterValidator<ReadOnlyCollection<TValue>> validator)
+        public VariadicNamedParameterBuilder<TValue> Validator(IValidator<ReadOnlyCollection<TValue>> validator)
         {
             this.AddValidator(validator);
             return this;
         }
 
-        public VariadicNamedParameterBuilder<TValue> Validator(CommandParameterValidator<TValue> validator) =>
-            this.Validator(CommandParameterValidator.FromElementValidator(validator));
+        public VariadicNamedParameterBuilder<TValue> Validator(IValidator<TValue> validator) =>
+            this.Validator(Medallion.CommandLine.Validator.FromElementValidator(validator));
 
-        public VariadicNamedParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public VariadicNamedParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
 
-        public VariadicNamedParameterBuilder<TValue> Validator(Action<ReadOnlyCollection<TValue>> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public VariadicNamedParameterBuilder<TValue> Validator(Action<ReadOnlyCollection<TValue>> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
     }
 }

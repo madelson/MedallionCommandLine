@@ -21,12 +21,12 @@ namespace Medallion.CommandLine.ParameterBuilders
 
         public new PositionalParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
 
-        public PositionalParameterBuilder<TValue> Validator(CommandParameterValidator<TValue> validator)
+        public PositionalParameterBuilder<TValue> Validator(IValidator<TValue> validator)
         {
             this.AddValidator(validator);
             return this;
         }
 
-        public PositionalParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public PositionalParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
     }
 }

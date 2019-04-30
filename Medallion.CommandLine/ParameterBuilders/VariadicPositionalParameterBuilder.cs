@@ -30,17 +30,17 @@ namespace Medallion.CommandLine.ParameterBuilders
 
         public new VariadicPositionalParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
 
-        public VariadicPositionalParameterBuilder<TValue> Validator(CommandParameterValidator<ReadOnlyCollection<TValue>> validator)
+        public VariadicPositionalParameterBuilder<TValue> Validator(IValidator<ReadOnlyCollection<TValue>> validator)
         {
             this.AddValidator(validator);
             return this;
         }
 
-        public VariadicPositionalParameterBuilder<TValue> Validator(CommandParameterValidator<TValue> validator) =>
-            this.Validator(CommandParameterValidator.FromElementValidator(validator));
+        public VariadicPositionalParameterBuilder<TValue> Validator(IValidator<TValue> validator) =>
+            this.Validator(Medallion.CommandLine.Validator.FromElementValidator(validator));
 
-        public VariadicPositionalParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public VariadicPositionalParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
 
-        public VariadicPositionalParameterBuilder<TValue> Validator(Action<ReadOnlyCollection<TValue>> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public VariadicPositionalParameterBuilder<TValue> Validator(Action<ReadOnlyCollection<TValue>> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
     }
 }

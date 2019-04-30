@@ -9,5 +9,7 @@ namespace Medallion.CommandLine
         internal CommandLineParser()
         {
         }
+
+        //public bool TryParse(IReadOnlyList<string> args, out ParsedCommandLine parsed)
     }
 }

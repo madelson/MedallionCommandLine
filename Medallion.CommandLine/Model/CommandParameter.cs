@@ -14,10 +14,16 @@ namespace Medallion.CommandLine
             bool isVariadic,
             NoDefault<object> defaultValue,
             CommandParameterParser parser,
-            CommandParameterValidator validator)
+            ObjectValidator validator)
             : base(name)
         {
+            this.Kind = kind;
             this.ValueType = valueType;
+            this.ShortName = shortName;
+            this.IsVariadic = isVariadic;
+            this.DefaultValue = defaultValue;
+            this.Parser = parser;
+            this.Validator = validator;
         }
 
         internal ParameterKind Kind { get; }
@@ -27,7 +33,7 @@ namespace Medallion.CommandLine
         internal bool IsVariadic { get; }
         internal NoDefault<object> DefaultValue { get; }
         internal CommandParameterParser Parser { get; }
-        internal CommandParameterValidator Validator { get; }
+        internal ObjectValidator Validator { get; }
     }
 
     internal enum ParameterKind
@@ -46,13 +52,13 @@ namespace Medallion.CommandLine
             bool isVariadic,
             NoDefault<TValue> defaultValue,
             CommandParameterParser<TValue> parser,
-            CommandParameterValidator<TValue> validator)
-            : base(name, kind, typeof(TValue), shortName, isVariadic, defaultValue.HasValue ? new NoDefault<object>(defaultValue.Value) : default, parser, validator)
+            IValidator<TValue> validator)
+            : base(name, kind, typeof(TValue), shortName, isVariadic, defaultValue.HasValue ? new NoDefault<object>(defaultValue.Value) : default, parser, validator.ToObjectValidator())
         {
         }
 
         internal new NoDefault<TValue> DefaultValue => base.DefaultValue.HasValue ? new NoDefault<TValue>((TValue)base.DefaultValue.Value) : default;
         internal new CommandParameterParser<TValue> Parser => (CommandParameterParser<TValue>)base.Parser;
-        internal new CommandParameterValidator<TValue> Validator => (CommandParameterValidator<TValue>)base.Validator;
+        internal new IValidator<TValue> Validator => (IValidator<TValue>)base.Validator;
     }
 }

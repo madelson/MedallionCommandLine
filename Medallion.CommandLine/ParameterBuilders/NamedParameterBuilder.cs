@@ -27,12 +27,12 @@ namespace Medallion.CommandLine.ParameterBuilders
 
         public new NamedParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
 
-        public NamedParameterBuilder<TValue> Validator(CommandParameterValidator<TValue> validator)
+        public NamedParameterBuilder<TValue> Validator(IValidator<TValue> validator)
         {
             this.AddValidator(validator);
             return this;
         }
 
-        public NamedParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(CommandParameterValidator.Create(validator));
+        public NamedParameterBuilder<TValue> Validator(Action<TValue> validator) => this.Validator(Medallion.CommandLine.Validator.Create(validator));
     }
 }

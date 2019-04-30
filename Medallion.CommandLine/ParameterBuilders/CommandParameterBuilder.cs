@@ -12,7 +12,7 @@ namespace Medallion.CommandLine.ParameterBuilders
         private readonly char? _shortName;
         private readonly bool _isVariadic;
 
-        private readonly List<CommandParameterValidator<TValue>> _validators = new List<CommandParameterValidator<TValue>>();
+        private readonly List<IValidator<TValue>> _validators = new List<IValidator<TValue>>();
         private NoDefault<TValue> _defaultValue;
 
         private protected CommandParameterBuilder(string name, ParameterKind kind, char? shortName, bool isVariadic)
@@ -32,7 +32,7 @@ namespace Medallion.CommandLine.ParameterBuilders
         }
 
         private protected void SetRequired() => this._defaultValue = default;
-        private protected void AddValidator(CommandParameterValidator<TValue> validator) => 
+        private protected void AddValidator(IValidator<TValue> validator) => 
             this._validators.Add(validator ?? throw new ArgumentNullException(nameof(validator)));
         
         internal CommandParameter<TValue> ToParameter() =>
@@ -43,7 +43,7 @@ namespace Medallion.CommandLine.ParameterBuilders
                 this._isVariadic,
                 this._defaultValue,
                 this.Parser ?? CommandParameterParser<TValue>.Default,
-                CommandParameterValidator.Combine(this._validators)
+                Validator.Combine(this._validators)
             );
     }
 }
