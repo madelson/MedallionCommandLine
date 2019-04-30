@@ -14,6 +14,9 @@ namespace Medallion.CommandLine.ParameterBuilders
 
         private readonly List<IValidator<TValue>> _validators = new List<IValidator<TValue>>();
         private NoDefault<TValue> _defaultValue;
+        private string _shortDescription;
+        private string _description;
+        private Uri _helpUrl;
 
         private protected CommandParameterBuilder(string name, ParameterKind kind, char? shortName, bool isVariadic)
         {
@@ -31,10 +34,31 @@ namespace Medallion.CommandLine.ParameterBuilders
             return (TBuilder)this;
         }
 
+        public TBuilder ShortDescription(string shortDescription)
+        {
+            this._shortDescription = shortDescription ?? throw new ArgumentNullException(nameof(shortDescription));
+            return (TBuilder)this;
+        }
+
+        public TBuilder Description(string description)
+        {
+            this._description = description ?? throw new ArgumentNullException(nameof(description));
+            return (TBuilder)this;
+        }
+
+        public TBuilder HelpUrl(Uri helpUrl)
+        {
+            if (helpUrl == null) { throw new ArgumentNullException(nameof(helpUrl)); }
+            if (!helpUrl.IsAbsoluteUri) { throw new ArgumentException(nameof(helpUrl), "must be absolute"); }
+
+            this._helpUrl = helpUrl;
+            return (TBuilder)this;
+        }
+
         private protected void SetRequired() => this._defaultValue = default;
         private protected void AddValidator(IValidator<TValue> validator) => 
             this._validators.Add(validator ?? throw new ArgumentNullException(nameof(validator)));
-        
+
         internal CommandParameter<TValue> ToParameter() =>
             new CommandParameter<TValue>(
                 this._name,
@@ -43,7 +67,10 @@ namespace Medallion.CommandLine.ParameterBuilders
                 this._isVariadic,
                 this._defaultValue,
                 this.Parser ?? CommandParameterParser<TValue>.Default,
-                Validator.Combine(this._validators)
+                Validator.Combine(this._validators),
+                shortDescription: this._shortDescription,
+                description: this._description,
+                this._helpUrl
             );
     }
 }

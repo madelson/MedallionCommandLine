@@ -83,11 +83,16 @@ namespace Medallion.CommandLine
             );
         }
 
-        public static IValidator<FileSystemInfo> Exists { get; } = 
-            Create<FileSystemInfo>(
-                value => value.Exists ? null : $"{(value is FileInfo ? "file" : "directory")} does not exist",
-                "exist"
-            );
+        private static IValidator<FileSystemInfo> _cachedExists;
+
+        public static IValidator<FileSystemInfo> Exists => _cachedExists
+            ?? (
+                _cachedExists =
+                Create<FileSystemInfo>(
+                    value => value.Exists ? null : $"{(value is FileInfo ? "file" : "directory")} does not exist",
+                    "exist"
+                )
+           );
 
         public static IValidator<string> Matches(Regex regex, string errorMessage = null, string description = null)
         {
@@ -98,11 +103,16 @@ namespace Medallion.CommandLine
                 description: description ?? $"match /{regex}/"
             );
         }
-        
-        public static IValidator<string> IsNotEmpty { get; } = 
-            Create<string>(
-                value => value == string.Empty ? "must not be the empty string" : null,
-                "not be the empty string"
+
+        private static IValidator<string> _cachedIsNotEmpty;
+
+        public static IValidator<string> IsNotEmpty => _cachedIsNotEmpty
+            ?? (
+                _cachedIsNotEmpty =
+                Create<string>(
+                    value => value == string.Empty ? "must not be the empty string" : null,
+                    "not be the empty string"
+                )
             );
 
         public static IValidator<TValue> And<TValue>(this IValidator<TValue> first, IValidator<TValue> second, bool shortCircuit = false)

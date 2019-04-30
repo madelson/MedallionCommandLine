@@ -14,7 +14,10 @@ namespace Medallion.CommandLine
             bool isVariadic,
             NoDefault<object> defaultValue,
             CommandParameterParser parser,
-            ObjectValidator validator)
+            ObjectValidator validator,
+            string shortDescription,
+            string description,
+            Uri helpUrl)
             : base(name)
         {
             this.Kind = kind;
@@ -52,8 +55,22 @@ namespace Medallion.CommandLine
             bool isVariadic,
             NoDefault<TValue> defaultValue,
             CommandParameterParser<TValue> parser,
-            IValidator<TValue> validator)
-            : base(name, kind, typeof(TValue), shortName, isVariadic, defaultValue.HasValue ? new NoDefault<object>(defaultValue.Value) : default, parser, validator.ToObjectValidator())
+            IValidator<TValue> validator,
+            string shortDescription,
+            string description, 
+            Uri helpUrl)
+            : base(
+                  name, 
+                  kind, 
+                  typeof(TValue), 
+                  shortName, 
+                  isVariadic, 
+                  defaultValue.HasValue ? new NoDefault<object>(defaultValue.Value) : default, 
+                  parser, 
+                  validator.ToObjectValidator(),
+                  shortDescription: shortDescription,
+                  description: description,
+                  helpUrl)
         {
         }
 
