@@ -13,7 +13,7 @@ namespace Medallion.CommandLine
             char? shortName,
             bool isVariadic,
             NoDefault<object> defaultValue,
-            CommandParameterParser parser,
+            CommandArgumentParser parser,
             ObjectValidator validator,
             string shortDescription,
             string description,
@@ -35,7 +35,7 @@ namespace Medallion.CommandLine
         internal char? ShortName { get; }
         internal bool IsVariadic { get; }
         internal NoDefault<object> DefaultValue { get; }
-        internal CommandParameterParser Parser { get; }
+        internal CommandArgumentParser Parser { get; }
         internal ObjectValidator Validator { get; }
     }
 
@@ -54,7 +54,7 @@ namespace Medallion.CommandLine
             char? shortName,
             bool isVariadic,
             NoDefault<TValue> defaultValue,
-            CommandParameterParser<TValue> parser,
+            CommandArgumentParser<TValue> parser,
             IValidator<TValue> validator,
             string shortDescription,
             string description, 
@@ -75,7 +75,7 @@ namespace Medallion.CommandLine
         }
 
         internal new NoDefault<TValue> DefaultValue => base.DefaultValue.HasValue ? new NoDefault<TValue>((TValue)base.DefaultValue.Value) : default;
-        internal new CommandParameterParser<TValue> Parser => (CommandParameterParser<TValue>)base.Parser;
+        internal new CommandArgumentParser<TValue> Parser => (CommandArgumentParser<TValue>)base.Parser;
         internal new IValidator<TValue> Validator => (IValidator<TValue>)base.Validator;
     }
 }

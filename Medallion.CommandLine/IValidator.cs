@@ -134,6 +134,20 @@ namespace Medallion.CommandLine
             );
         }
 
+        public static IValidator<TValue> OneOf<TValue>(params TValue[] allowedValues) => OneOf(allowedValues.AsEnumerable());
+
+        public static IValidator<TValue> OneOf<TValue>(IEnumerable<TValue> allowedValues, IEqualityComparer<TValue> comparer = null)
+        {
+            var allowedValuesSet = new HashSet<TValue>(allowedValues ?? throw new ArgumentNullException(nameof(allowedValues)), comparer ?? EqualityComparer<TValue>.Default);
+            if (allowedValuesSet.Count < 2) { throw new ArgumentException("must have at least 2 distinct elements", nameof(allowedValues)); }
+
+            var requirement = $"be one of [{string.Join(", ", allowedValues)}]";
+            return Create<TValue>(
+                v => allowedValues.Contains(v) ? null : $"must {requirement}",
+                requirement
+            );
+        }
+
         internal static ObjectValidator ToObjectValidator<TValue>(this IValidator<TValue> validator)
         {
             return validator is ObjectValidator objectValidator ? objectValidator : new ObjectValidator<TValue>(validator);

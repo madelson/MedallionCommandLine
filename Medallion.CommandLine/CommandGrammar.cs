@@ -52,7 +52,7 @@ namespace Medallion.CommandLine
             this._subCommands.Add(subCommand);
             return subCommand;
         }
-        
+
         private CommandParameter<TValue> AddParameter<TValue, TBuilder>(TBuilder builder, Action<TBuilder> options)
             where TBuilder : CommandParameterBuilder<TValue, TBuilder>
         {

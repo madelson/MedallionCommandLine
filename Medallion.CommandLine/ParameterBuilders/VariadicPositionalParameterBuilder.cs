@@ -22,13 +22,13 @@ namespace Medallion.CommandLine.ParameterBuilders
             return this;
         }
 
-        public new VariadicPositionalParameterBuilder<TValue> Parser(CommandParameterParser<TValue> parser)
+        public new VariadicPositionalParameterBuilder<TValue> Parser(CommandArgumentParser<TValue> parser)
         {
-            base.Parser = CommandParameterParser.FromElementParser(parser);
+            base.Parser = CommandArgumentParser.FromElementParser(parser);
             return this;
         }
 
-        public new VariadicPositionalParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
+        public new VariadicPositionalParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandArgumentParser.Create(parser));
 
         public VariadicPositionalParameterBuilder<TValue> Validator(IValidator<ReadOnlyCollection<TValue>> validator)
         {

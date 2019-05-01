@@ -1,186 +1,107 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Reflection;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 
-//namespace Medallion.CommandLine
-//{
-//    public abstract class CommandArgumentParser<TArgument>
-//    {
-//        public abstract bool TryParse(string text, out TArgument parsed, out string usageMessage);
+namespace Medallion.CommandLine
+{
+    public abstract class CommandArgumentParser
+    {
+        private protected CommandArgumentParser() { }
 
-//        internal static CommandArgumentParser<TArgument> Create(Func<string, TArgument> parser) => new FuncParser(parser);
+        public abstract bool TryParse(IReadOnlyList<string> tokens, out object parsed, out string errorMessage);
+        
+        internal static CommandArgumentParser<TValue> Create<TValue>(Func<string, TValue> parser) => 
+            new FuncParser<TValue>(parser ?? throw new ArgumentNullException(nameof(parser)));
 
-//        private sealed class FuncParser : CommandArgumentParser<TArgument>
-//        {
-//            private readonly Func<string, TArgument> _parser;
+        internal static CommandArgumentParser<ReadOnlyCollection<TValue>> FromElementParser<TValue>(CommandArgumentParser<TValue> elementParser) =>
+            new CollectionParser<TValue>(elementParser ?? throw new ArgumentNullException(nameof(elementParser)));
 
-//            public FuncParser(Func<string, TArgument> parser)
-//            {
-//                this._parser = parser;
-//            }
+        internal sealed class FuncParser<TValue> : SingleTokenParser<TValue>
+        {
+            private readonly Func<string, TValue> _parser;
 
-//            public override bool TryParse(string text, out TArgument parsed, out string usageMessage)
-//            {
-//                try
-//                {
-//                    parsed = this._parser(text);
-//                    usageMessage = null;
-//                    return true;
-//                }
-//                catch (Exception ex)
-//                {
-//                    usageMessage = ex.Message;
-//                    parsed = default;
-//                    return false;
-//                }
-//            }
-//        }
-//    }
+            public FuncParser(Func<string, TValue> parser)
+            {
+                this._parser = parser;
+            }
 
-//    public delegate bool TryParseCommandArgument<T>(string text, out T parsed);
+            protected override bool TryParse(string token, out TValue parsed, out string errorMessage)
+            {
+                try { parsed = this._parser(token); }
+                catch (Exception ex)
+                {
+                    errorMessage = ex.Message;
+                    parsed = default;
+                    return false;
+                }
 
-//#pragma warning disable SA1130 // work around stylecop issue
-//    public abstract class Parser
-//    {
-//        public static TryParseCommandArgument<T> For<T>() => DefaultParser<T>.Value;
+                errorMessage = null;
+                return true;
+            }
+        }
 
-//        public static TryParseCommandArgument<T> Create<T>(Func<string, T> parse)
-//        {
-//            if (parse == null) { throw new ArgumentNullException(nameof(parse)); }
+        private sealed class CollectionParser<TValue> : CommandArgumentParser<ReadOnlyCollection<TValue>>
+        {
+            private readonly CommandArgumentParser<TValue> _elementParser;
 
-//            return delegate(string text, out T parsed)
-//            {
-//                try
-//                {
-//                    parsed = parse(text);
-//                    return true;
-//                }
-//                catch
-//                {
-//                    parsed = default;
-//                    return false;
-//                }
-//            };
-//        }
+            public CollectionParser(CommandArgumentParser<TValue> elementParser)
+            {
+                this._elementParser = elementParser;
+            }
 
-//        private static class DefaultParser<T>
-//        {
-//            private static TryParseCommandArgument<T> _value;
+            public override bool TryParse(IReadOnlyList<string> tokens, out ReadOnlyCollection<TValue> parsed, out string errorMessage)
+            {
+                if (tokens == null) { throw new ArgumentNullException(nameof(tokens)); }
+                if (tokens.Contains(null)) { throw new ArgumentNullException(nameof(tokens) + ": must not contain null"); }
 
-//            public static TryParseCommandArgument<T> Value => _value ?? (_value = CreateDefault());
+                var result = new TValue[tokens.Count];
+                var singleToken = new string[1];
+                for (var i = 0; i < result.Length; ++i)
+                {
+                    singleToken[0] = tokens[i];
+                    if (!this._elementParser.TryParse(singleToken, out result[i], out errorMessage))
+                    {
+                        parsed = null;
+                        return false;
+                    }
+                }
 
-//            private static TryParseCommandArgument<T> CreateDefault()
-//            {
-//                // special-case enums:
-//                if (typeof(T).GetTypeInfo().IsEnum)
-//                {
-//                    return CreateForEnum<T>();
-//                }
+                parsed = new ReadOnlyCollection<TValue>(result);
+                errorMessage = null;
+                return true;
+            }
+        }
+    }
 
-//                // first priorty: TryParse static method
-//                var publicStaticMethods = typeof(T).GetTypeInfo().DeclaredMethods
-//                    .Where(m => m.IsPublic && m.IsStatic)
-//                    .ToArray();
-//                var tryParseMethod = publicStaticMethods.FirstOrDefault(
-//                    m => m.Name == "TryParse" 
-//                        && m.ReturnType == typeof(bool)
-//                        && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(string), typeof(T).MakeByRefType() })
-//                );
-//                if (tryParseMethod != null)
-//                {
-//                    return delegate(string text, out T parsed)
-//                    {
-//                        var arguments = new object[] { text, null };
-//                        var result = (bool)tryParseMethod.InvokeWithOriginalException(obj: null, arguments: arguments);
-//                        parsed = (T)arguments[1];
-//                        return result;
-//                    };
-//                }
+    public abstract class CommandArgumentParser<TValue> : CommandArgumentParser
+    {
+        private static CommandArgumentParser<TValue> _cachedDefault;
+        internal static CommandArgumentParser<TValue> Default => _cachedDefault ?? (_cachedDefault = DefaultCommandArgumentParserFactory.Create<TValue>());
 
-//                // second priority: Parse static method
-//                var parseMethod = publicStaticMethods.FirstOrDefault(
-//                    m => m.Name == "Parse"
-//                        && m.ReturnType == typeof(T)
-//                        && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(string) })
-//                );
-//                if (parseMethod != null)
-//                {
-//                    return Create(text => (T)parseMethod.InvokeWithOriginalException(obj: null, arguments: new object[] { text }));
-//                }
+        public sealed override bool TryParse(IReadOnlyList<string> tokens, out object parsed, out string errorMessage)
+        {
+            var result = this.TryParse(tokens, out TValue parsedValue, out errorMessage);
+            parsed = parsedValue;
+            return result;
+        }
 
-//                // todo should accept further optional parameters
-//                // third priority: string constructor
-//                if (!typeof(T).GetTypeInfo().IsAbstract)
-//                {
-//                    var stringConstructor = typeof(T).GetTypeInfo().DeclaredConstructors
-//                        .Where(c => c.IsPublic && !c.IsStatic && c.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(string) }))
-//                        .FirstOrDefault();
-//                    if (stringConstructor != null)
-//                    {
-//                        return Create(text => (T)stringConstructor.InvokeWithOriginalException(new object[] { text }));
-//                    }
-//                }
+        public abstract bool TryParse(IReadOnlyList<string> tokens, out TValue parsed, out string errorMessage);
+    }
 
-//                // special-case nullabes
-//                var nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(T));
-//                if (nullableUnderlyingType != null)
-//                {
-//                    return (TryParseCommandArgument<T>)typeof(CommandArgumentParser).GetTypeInfo().DeclaredMethods
-//                        .Single(m => m.Name == nameof(ForNullable))
-//                        .MakeGenericMethod(nullableUnderlyingType)
-//                        .InvokeWithOriginalException(obj: null, arguments: Array.Empty<object>());
-//                }
+    internal abstract class SingleTokenParser<TValue> : CommandArgumentParser<TValue>
+    {
+        public sealed override bool TryParse(IReadOnlyList<string> tokens, out TValue parsed, out string errorMessage)
+        {
+            if (tokens == null) { throw new ArgumentNullException(nameof(tokens)); }
+            if (tokens.Count != 1) { throw new ArgumentOutOfRangeException(nameof(tokens), "must have length 1"); }
+            var token = tokens[0];
+            if (token == null) { throw new ArgumentNullException(nameof(tokens) + ": must not contain null"); }
 
-//                throw new NotSupportedException(
-//                    $"Could not create a default parser for {typeof(T)}. The type must have a either a"
-//                    + $" 'public static bool TryParse(string, out {typeof(T)})' method, a"
-//                    + $" 'public static {typeof(T)} Parse(string)' method, or a 'public {typeof(T)}(string)' constructor"
-//                );
-//            }
+            return this.TryParse(token, out parsed, out errorMessage);
+        }
 
-//            private static TryParseCommandArgument<TEnum> CreateForEnum<TEnum>()
-//            {
-//                // this is the default behavior for enums. We do not leverage native enum parsing because
-//                // we want to match (a) only defined values and (b) only text values. We ignore case by
-//                // default on the assumption that .NET enums will be PascalCase but CLIs probably don't want
-//                // that
-
-//                var valuesByName = Enum.GetValues(typeof(TEnum))
-//                    .Cast<TEnum>()
-//                    .ToDictionary(t => t.ToString(), t => t, StringComparer.OrdinalIgnoreCase);
-
-//                // TODO should accept first letter when unique, like a command
-
-//                return delegate(string text, out TEnum parsed)
-//                {
-//                    if (text == null || !valuesByName.TryGetValue(text, out var value))
-//                    {
-//                        parsed = default;
-//                        return false;
-//                    }
-//                    parsed = value;
-//                    return true;
-//                };
-//            }
-//        }
-
-//        private static TryParseCommandArgument<T?> ForNullable<T>()
-//            where T : struct
-//        {
-//            var underlyingParser = For<T>();
-//            return delegate(string text, out T? parsed)
-//            {
-//                if (underlyingParser(text, out var underlyingParsed))
-//                {
-//                    parsed = underlyingParsed;
-//                    return true;
-//                }
-//                parsed = null;
-//                return false;
-//            };
-//        }
-//    }
-//#pragma warning restore SA1130
-//}
+        protected abstract bool TryParse(string text, out TValue parsed, out string errorMessage);
+    }
+}

@@ -26,7 +26,7 @@ namespace Medallion.CommandLine.ParameterBuilders
             this._isVariadic = isVariadic;
         }
         
-        private protected CommandParameterParser<TValue> Parser { get; set; }
+        private protected CommandArgumentParser<TValue> Parser { get; set; }
 
         public TBuilder DefaultValue(TValue defaultValue)
         {
@@ -66,7 +66,7 @@ namespace Medallion.CommandLine.ParameterBuilders
                 this._shortName,
                 this._isVariadic,
                 this._defaultValue,
-                this.Parser ?? CommandParameterParser<TValue>.Default,
+                this.Parser ?? CommandArgumentParser<TValue>.Default,
                 Validator.Combine(this._validators),
                 shortDescription: this._shortDescription,
                 description: this._description,

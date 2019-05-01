@@ -19,13 +19,13 @@ namespace Medallion.CommandLine.ParameterBuilders
             return this;
         }
 
-        public new NamedParameterBuilder<TValue> Parser(CommandParameterParser<TValue> parser)
+        public new NamedParameterBuilder<TValue> Parser(CommandArgumentParser<TValue> parser)
         {
             base.Parser = parser ?? throw new ArgumentNullException(nameof(parser));
             return this;
         }
 
-        public new NamedParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandParameterParser.Create(parser));
+        public new NamedParameterBuilder<TValue> Parser(Func<string, TValue> parser) => this.Parser(CommandArgumentParser.Create(parser));
 
         public NamedParameterBuilder<TValue> Validator(IValidator<TValue> validator)
         {

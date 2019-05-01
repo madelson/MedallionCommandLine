@@ -9,7 +9,7 @@ namespace Medallion.CommandLine.ParameterBuilders
 {
     internal interface IHasParser<TValue, TBuilder>
     {
-        TBuilder Parser(CommandParameterParser<TValue> parser);
+        TBuilder Parser(CommandArgumentParser<TValue> parser);
         TBuilder Parser(Func<string, TValue> parser);
     }
 
